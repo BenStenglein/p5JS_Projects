@@ -38,6 +38,11 @@ let leafBack = [
     {x:3*leafUnit,y:leafUnit},
     {x:leafUnit,y:leafUnit},
     ]
+let testCircle = [
+    {x:50,y:0},
+    // {x:50,y:50},
+    {x1:100,y1:0,x2:100,y2:50,x3:50,y3:50}
+]
 
 function setup() {
     // pot = scalePolygon(pot,1)
@@ -51,12 +56,10 @@ function draw() {
     // let unit = 30;
     background(210)
     // scale
-    // drawPolygon(pot,"#E35336");
-    drawPolygon(dirt,"#54392D")
-    drawComplexPolygon(pot,"#fff")
-    drawPolygon(zeroPot)
-    
-
+    // drawPolygon(dirt,"#54392D")
+    // drawComplexPolygon(pot,"#E35336")
+    // drawPolygon(zeroPot,"#fff")
+    drawComplexPolygon(testCircle,"#ff0000")
 }
 function drawPolygon(arr,color){
     strokeWeight(0);
@@ -88,8 +91,8 @@ function scalePolygon(arr,factor){
     return newArr
 }
 function drawComplexPolygon(arr,color){
-    strokeWeight(0);
-    fill(color)
+    // strokeWeight(1);
+    // fill(color)
     beginShape()
     for(let i =0; i<arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
@@ -98,8 +101,15 @@ function drawComplexPolygon(arr,color){
             vertex(x,y)
         }
         else if(Object.keys(arr[i]).length == 6){
-            // set the point as a bezer
+            noFill()
+            let x1 = arr[i].x1
+            let y1 = arr[i].y1
+            let x2 = arr[i].x2
+            let y2 = arr[i].y2
+            let x3 = arr[i].x3
+            let y3 = arr[i].y3
+            bezierVertex(x1,y1,x2,y2,x3,y3)
         }
     }
-    endShape(CLOSE);
+    endShape();
 }
