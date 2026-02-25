@@ -31,7 +31,7 @@ let dirt = [
     ]
 let leafUnit = 0.25*unit
 let leafBack = [
-    {x:0,y:0},
+    
     {x:leafUnit,y:-leafUnit},
     {x:3*leafUnit,y:-leafUnit},
     {x:4*leafUnit,y:0},
@@ -43,11 +43,15 @@ let testCircle = [
     // {x:50,y:50},
     {x1:100,y1:0,x2:100,y2:50,x3:50,y3:50}
 ]
-
+let leaf = [
+    {x:0,y:0},
+    {x:4,y:0}
+]
 function setup() {
     // pot = scalePolygon(pot,1)
     pot = translatePolygon(pot,0,unit)
-    pot = scalePolygon(pot,2);
+    leaf = scalePolygon(leaf,unit)
+    pot = scalePolygon(pot,1);
     dirt = scalePolygon(dirt,2);
     createCanvas(800, 600); 
 }
@@ -57,20 +61,10 @@ function draw() {
     background(210)
     // scale
     // drawPolygon(dirt,"#54392D")
-    // drawComplexPolygon(pot,"#E35336")
+    drawComplexPolygon(pot,"#E35336",0)
+    
     // drawPolygon(zeroPot,"#fff")
-    drawComplexPolygon(testCircle,"#ff0000")
-}
-function drawPolygon(arr,color){
-    strokeWeight(0);
-    fill(color)
-    beginShape()
-    for(let i =0; i<arr.length;i++){
-        let x = arr[i].x
-        let y = arr[i].y
-        vertex(x,y)
-    }
-    endShape(CLOSE);
+    drawComplexPolygon(testCircle,"#ff0000",0)
 }
 function translatePolygon(arr,dx,dy){
     newArr = []
@@ -90,12 +84,13 @@ function scalePolygon(arr,factor){
     }
     return newArr
 }
-function drawComplexPolygon(arr,color){
-    // strokeWeight(1);
-    // fill(color)
+function drawComplexPolygon(arr,color,stroke){
+    strokeWeight(stroke);
+    fill(color)
     beginShape()
     for(let i =0; i<arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
+            // noFill()
             let x = arr[i].x
             let y = arr[i].y
             vertex(x,y)
@@ -111,5 +106,5 @@ function drawComplexPolygon(arr,color){
             bezierVertex(x1,y1,x2,y2,x3,y3)
         }
     }
-    endShape();
+    endShape(CLOSE);
 }
