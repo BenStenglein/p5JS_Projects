@@ -44,31 +44,30 @@ let testCircle = [
 ]
 let leaf = [
     {x:0,y:0},
-    // {x:4,y:0}
     {x1:2,y1:0.5,x2:2,y2:0.5,x3:4,y3:0},
     {x1:2,y1:-0.5,x2:2,y2:-0.5,x3:0,y3:0}
 ]
 function setup() {
     // pot = scalePolygon(pot,1)
+    testfunc()
     pot = translatePolygon(pot,0,unit)
     leaf = scalePolygon(leaf,unit)
     leaf = translatePolygon(leaf,0,32)
     pot = scalePolygon(pot,1);
     dirt = scalePolygon(dirt,2);
-    createCanvas(800, 600); 
+    createCanvas(800, 600);
+    console.log(leaf[1].x3)
 }
-
 function draw() {
     // let unit = 30;
     background(210)
-    // scale
     // drawPolygon(dirt,"#54392D")
     // approxRect(leaf)
     // drawComplexPolygon(pot,"#E35336",0)
     // drawComplexPolygon(leaf,"#000",1)
     // drawPolygon(zeroPot,"#fff")
     // drawComplexPolygon(testCircle,"#ff0000",0)
-    testfunc()
+    
     // console.log(leaf[1].x3)
     
 }
@@ -145,7 +144,7 @@ function approxRect(arr){
     beginShape()
     fill("#fff")
     stroke(5)
-    for(let i =0; i<arr.length;i++){
+    for(let i =0; i < arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
             let x =arr[i].x;
             let y = arr[i].y;
@@ -187,21 +186,15 @@ function approxRect(arr){
                     x1 = x;
                 }
             }
-            else{
-                console.log("intial x failed, trying anchor 2")
-                x = nX4;
-                if (x != 0){
-                    console.log(x)
-                }
-                if (x < x1 || x > x2){
-                if (x > x2){
-                    x2 = x;
-                    console.log("using anchor 2 as x2")
-                }
-                else if(x <x1){
-                    x1 = x;
-                    console.log("using anchor 2 as x1")
-                }
+            x = arr[i].x3
+            if (x != 0){
+            }
+            if (x < x1 || x > x2){
+            if (x > x2){
+                x2 = x;
+            }
+            else if(x <x1){
+                x1 = x;
             }
             }   
             if (y < y1 || y > y2){
@@ -212,7 +205,6 @@ function approxRect(arr){
                     y1 = y;
                 }
             }
-            else{
                 y = nY4;
                 if (y < y1 || y > y2){
                 if (y > y2){
@@ -222,9 +214,7 @@ function approxRect(arr){
                     y1 = y;
                 }
             }
-            }  
-        }
-        
+        }  
     }
     vertex(x1,y1)
     vertex(x1,y2)
@@ -235,9 +225,32 @@ function approxRect(arr){
     let centY = y1+((y2-y1)/2)
     strokeWeight(3)
     point(centX,centY)
+    return ({x:centX,y:centY})
 }
 function testfunc(){
-   
+   console.log(approxRect(leaf));
+//    translate[cents[0],cents[1]]
+   rotate(QUARTER_PI)
+   drawComplexPolygon(leaf,"#000",1)
+}
+function updatePoints(arr){
+    cents = approxRect(arr)
+    for(let i =0; i<arr.length;i++){
+        if(Object.keys(arr[i]).length == 2){
+                if(arr[i].x > cents.x){
+                    let nX = arr[i].x - cents.x
+                }
+                else if(arr[i].x == cents.x){
+                    let nX = 0;
+                }
+                else if ( arr[i].x < cents.x){
+                    nX = cents.x - arr[i].x
+                }
+        }
+        else if(Object.keys(arr[i]).length == 6){
+
+        }
+}
 }
 /* useful logic structure for iterating through polygons
 for(let i =0; i<arr.length;i++){
