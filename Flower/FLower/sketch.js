@@ -49,14 +49,15 @@ let leaf = [
 ]
 function setup() {
     // pot = scalePolygon(pot,1)
-    testfunc()
+    // testfunc()
     pot = translatePolygon(pot,0,unit)
     leaf = scalePolygon(leaf,unit)
     leaf = translatePolygon(leaf,0,32)
     pot = scalePolygon(pot,1);
+    pot = updatePoints(pot)
     dirt = scalePolygon(dirt,2);
     createCanvas(800, 600);
-    console.log(leaf[1].x3)
+    // console.log(leaf[1].x3)
 }
 function draw() {
     // let unit = 30;
@@ -64,9 +65,11 @@ function draw() {
     // drawPolygon(dirt,"#54392D")
     // approxRect(leaf)
     // drawComplexPolygon(pot,"#E35336",0)
+    // drawCenteredPolygon(pot,"#fff",0)
+    point(pot[pot.length-1].x,pot[pot.length-1].y)
+    // approxRect(pot)
+    testFunc(pot)
     // drawComplexPolygon(leaf,"#000",1)
-    // drawPolygon(zeroPot,"#fff")
-    // drawComplexPolygon(testCircle,"#ff0000",0)
     
     // console.log(leaf[1].x3)
     
@@ -120,6 +123,31 @@ function drawComplexPolygon(arr,color,stroke){
         if(Object.keys(arr[i]).length == 2){
             let x = arr[i].x
             let y = arr[i].y
+            vertex(x,y)
+        }
+        else if(Object.keys(arr[i]).length == 6){
+            let nX1 = arr[i].x1
+            let nY1 = arr[i].y1
+            let nX2 = arr[i].x2
+            let nY2 = arr[i].y2
+            let nX3 = arr[i].x3
+            let nY3 = arr[i].y3
+            bezierVertex(nX1,nY1);
+            bezierVertex(nX2,nY2);
+            bezierVertex(nX3,nY3);
+        }
+    }
+    endShape();
+}
+function drawCenteredPolygon(arr,color,stroke){
+    strokeWeight(stroke);
+    fill(color);
+    // console.log(cents)
+    beginShape();
+    for(let i =0; i<arr.length-1;i++){
+        if(Object.keys(arr[i]).length == 2){
+            let x = 0 - arr[i].x
+            let y = 0 - arr[i].y
             vertex(x,y)
         }
         else if(Object.keys(arr[i]).length == 6){
@@ -227,30 +255,70 @@ function approxRect(arr){
     point(centX,centY)
     return ({x:centX,y:centY})
 }
-function testfunc(){
-   console.log(approxRect(leaf));
-//    translate[cents[0],cents[1]]
-   rotate(QUARTER_PI)
-   drawComplexPolygon(leaf,"#000",1)
-}
 function updatePoints(arr){
     cents = approxRect(arr)
+    nArr = []
     for(let i =0; i<arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
-                if(arr[i].x > cents.x){
-                    let nX = arr[i].x - cents.x
-                }
-                else if(arr[i].x == cents.x){
+            if(arr[i].x == cents.x){
+                let nX = 0;
+            }else{
+                nX = cents.x - arr[i].x
+            }
+            if(arr[i].y == cents.y){
                     let nX = 0;
+                }else{
+                    nY = cents.y - arr[i].y
                 }
-                else if ( arr[i].x < cents.x){
-                    nX = cents.x - arr[i].x
-                }
+            nArr[i] = {x:nX,y:nY}
         }
         else if(Object.keys(arr[i]).length == 6){
+            if(arr[i].x1 == cents.x){
+                let nX1 = 0;
+            }else{
+                let nX1 = cents.x1 - arr[i].x
+            }
+            if(arr[i].x2 == cents.x){
+                let nX2 = 0;
+            }else{
+                let nX2 = cents.x2 - arr[i].x
+            }
+            if(arr[i].x3 == cents.x){
+                let nX3 = 0;
+            }else{
+                let nX3 = cents.x3 - arr[i].x
+            }
 
+            if(arr[i].y1 == cents.y){
+                let nY1 = 0;
+            }else{
+                let nY1 = cents.y1 - arr[i].y
+            }
+            if(arr[i].y2 == cents.y){
+                let nY2 = 0;
+            }else{
+                let nY2 = cents.y2 - arr[i].y
+            }
+            if(arr[i].y3 == cents.y){
+                let nY3 = 0;
+            }else{
+                let nY3 = cents.y3 - arr[i].y
+            }
         }
+    }
+    
+    nArr.push(cents)
+    console.log(nArr)
+    return(nArr)
 }
+function testFunc(arr){
+    let cent = arr[arr.length-1]
+    console.log(arr[arr.length-1])
+    push()
+    translate(cent.x,cent.y)
+    rotate(QUARTER_PI)
+    drawCenteredPolygon(arr,"#fff",0)
+    pop()
 }
 /* useful logic structure for iterating through polygons
 for(let i =0; i<arr.length;i++){
