@@ -48,31 +48,28 @@ let leaf = [
     {x1:2,y1:-0.5,x2:2,y2:-0.5,x3:0,y3:0}
 ]
 function setup() {
-    // pot = scalePolygon(pot,1)
-    // testfunc()
     pot = translatePolygon(pot,0,unit)
     leaf = scalePolygon(leaf,unit)
     leaf = translatePolygon(leaf,0,32)
+    leaf = updatePoints(leaf)
     pot = scalePolygon(pot,1);
     pot = updatePoints(pot)
-    dirt = scalePolygon(dirt,2);
+    // dirt = scalePolygon(dirt,2);
+    dirt = updatePoints(dirt)
     createCanvas(800, 600);
     // console.log(leaf[1].x3)
+    
+
+    
 }
 function draw() {
     // let unit = 30;
     background(210)
-    // drawPolygon(dirt,"#54392D")
-    // approxRect(leaf)
-    // drawComplexPolygon(pot,"#E35336",0)
-    // drawCenteredPolygon(pot,"#fff",0)
+    drawCenteredPolygon(dirt,"#54392D")
+    drawCenteredPolygon(pot,"#E35336",0)
+    drawCenteredPolygon(leaf,"#008000",0)
     point(pot[pot.length-1].x,pot[pot.length-1].y)
-    // approxRect(pot)
-    testFunc(pot)
-    // drawComplexPolygon(leaf,"#000",1)
-    
-    // console.log(leaf[1].x3)
-    
+
 }
 function translatePolygon(arr,dx,dy){
     newArr = []
@@ -140,6 +137,10 @@ function drawComplexPolygon(arr,color,stroke){
     endShape();
 }
 function drawCenteredPolygon(arr,color,stroke){
+    push()
+    let cents = arr[arr.length-1];
+    translate(cents.x,cents.y);
+    // rotate(cents.rot)
     strokeWeight(stroke);
     fill(color);
     // console.log(cents)
@@ -163,6 +164,7 @@ function drawCenteredPolygon(arr,color,stroke){
         }
     }
     endShape();
+    translate(-cents.x, -cents.y)
 }
 function approxRect(arr){
     let x1 = arr[0].x;
@@ -263,12 +265,12 @@ function updatePoints(arr){
             if(arr[i].x == cents.x){
                 let nX = 0;
             }else{
-                nX = cents.x - arr[i].x
+                let nX = cents.x - arr[i].x
             }
             if(arr[i].y == cents.y){
-                    let nX = 0;
+                    let nY = 0;
                 }else{
-                    nY = cents.y - arr[i].y
+                    let nY = cents.y - arr[i].y
                 }
             nArr[i] = {x:nX,y:nY}
         }
@@ -304,16 +306,17 @@ function updatePoints(arr){
             }else{
                 let nY3 = cents.y3 - arr[i].y
             }
+            newArr.push({x1:nX1,y1:nY1,x2:nX2,y2:nY2,x3:nX3,y3:nY3});
         }
     }
     
     nArr.push(cents)
-    console.log(nArr)
+    // console.log(nArr)
     return(nArr)
 }
 function testFunc(arr){
     let cent = arr[arr.length-1]
-    console.log(arr[arr.length-1])
+    // console.log(arr[arr.length-1])
     push()
     translate(cent.x,cent.y)
     rotate(QUARTER_PI)
