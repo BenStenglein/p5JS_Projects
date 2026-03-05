@@ -9,7 +9,8 @@ let pot = [
     {x:6*unit,y:6*unit},
     {x:6*unit,y:2*unit},
     {x:5*unit,y:1*unit},
-    {x:6*unit,y:0}
+    {x:6*unit,y:0},
+    {x:0,y:0}
     ]
 let square = [
     {x:0,y:0},
@@ -48,27 +49,27 @@ let leaf = [
     {x1:2,y1:-0.5,x2:2,y2:-0.5,x3:0,y3:0}
 ]
 function setup() {
-    pot = translatePolygon(pot,0,unit)
+    
     leaf = scalePolygon(leaf,unit)
-    leaf = translatePolygon(leaf,0,32)
+    // leaf = translatePolygon(leaf,700,400)
     leaf = updatePoints(leaf)
-    pot = scalePolygon(pot,1);
-    pot = updatePoints(pot)
+    // leaf[leaf.length-1] = {x:400,y:300};
+    // pot = translatePolygon(pot,10,unit)
+    // pot = scalePolygon(pot,1);
+    // pot = updatePoints(pot)
+    // translatePolygon(pot,32,32) 
     // dirt = scalePolygon(dirt,2);
-    dirt = updatePoints(dirt)
+    // dirt = updatePoints(dirt)
     createCanvas(800, 600);
     // console.log(leaf[1].x3)
-    
-
-    
 }
 function draw() {
     // let unit = 30;
     background(210)
-    drawCenteredPolygon(dirt,"#54392D")
-    drawCenteredPolygon(pot,"#E35336",0)
-    drawCenteredPolygon(leaf,"#008000",0)
-    point(pot[pot.length-1].x,pot[pot.length-1].y)
+    // drawCenteredPolygon(dirt,"#54392D")
+    // drawCenteredPolygon(pot,"#E35336",0)
+    // drawCenteredPolygon(leaf,"#008000",1)
+    // drawComplexPolygon(leaf,"#008000",1)
 
 }
 function translatePolygon(arr,dx,dy){
@@ -93,6 +94,7 @@ function translatePolygon(arr,dx,dy){
     return newArr;
 }
 function scalePolygon(arr,factor){
+    console.log(arr)
     newArr = []
     for(let i =0; i<arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
@@ -102,7 +104,7 @@ function scalePolygon(arr,factor){
         }
         else if(Object.keys(arr[i]).length == 6){
             let nX1 = arr[i].x1 *= factor;
-            let nY1 = arr[i].y1 *= factor;
+            let nY1 = arr[i].y1 *= factor; 
             let nX2 = arr[i].x2 *= factor;
             let nY2 = arr[i].y2 *= factor;
             let nX3 = arr[i].x3 *= factor;
@@ -110,6 +112,7 @@ function scalePolygon(arr,factor){
             newArr.push({x1:nX1,y1:nY1,x2:nX2,y2:nY2,x3:nX3,y3:nY3});
         }
     }
+    console.log(newArr)
     return newArr;
 }
 function drawComplexPolygon(arr,color,stroke){
@@ -140,6 +143,7 @@ function drawCenteredPolygon(arr,color,stroke){
     push()
     let cents = arr[arr.length-1];
     translate(cents.x,cents.y);
+    // console.log(`centerpoint : ${cents.x}, ${cents.y}`)
     // rotate(cents.rot)
     strokeWeight(stroke);
     fill(color);
@@ -152,12 +156,20 @@ function drawCenteredPolygon(arr,color,stroke){
             vertex(x,y)
         }
         else if(Object.keys(arr[i]).length == 6){
-            let nX1 = arr[i].x1
-            let nY1 = arr[i].y1
-            let nX2 = arr[i].x2
-            let nY2 = arr[i].y2
-            let nX3 = arr[i].x3
-            let nY3 = arr[i].y3
+            let nX1 = cents.x-arr[i].x1
+            let nY1 = cents.x-arr[i].y1
+            let nX2 = cents.x-arr[i].x2
+
+            let nY2 = cents.y-arr[i].y2
+            let nX3 = cents.y-arr[i].x3
+            let nY3 = cents.y-arr[i].y3
+            // let nX1 = arr[i].x1
+            // let nY1 = arr[i].y1
+            // let nX2 = arr[i].x2
+
+            // let nY2 = arr[i].y2
+            // let nX3 = arr[i].x3
+            // let nY3 = arr[i].y3
             bezierVertex(nX1,nY1);
             bezierVertex(nX2,nY2);
             bezierVertex(nX3,nY3);
@@ -165,6 +177,7 @@ function drawCenteredPolygon(arr,color,stroke){
     }
     endShape();
     translate(-cents.x, -cents.y)
+    pop()
 }
 function approxRect(arr){
     let x1 = arr[0].x;
@@ -260,58 +273,66 @@ function approxRect(arr){
 function updatePoints(arr){
     cents = approxRect(arr)
     nArr = []
-    for(let i =0; i<arr.length;i++){
+    console.log(arr)
+    for(let i = 0; i<arr.length;i++){
         if(Object.keys(arr[i]).length == 2){
+            let nX=0;
+            let nY=0;
             if(arr[i].x == cents.x){
-                let nX = 0;
+                nX = 0;
             }else{
-                let nX = cents.x - arr[i].x
+                nX = cents.x - arr[i].x
             }
             if(arr[i].y == cents.y){
-                    let nY = 0;
+                    nY = 0;
                 }else{
-                    let nY = cents.y - arr[i].y
+                    nY = cents.y - arr[i].y
                 }
             nArr[i] = {x:nX,y:nY}
         }
         else if(Object.keys(arr[i]).length == 6){
-            if(arr[i].x1 == cents.x){
-                let nX1 = 0;
-            }else{
-                let nX1 = cents.x1 - arr[i].x
-            }
-            if(arr[i].x2 == cents.x){
-                let nX2 = 0;
-            }else{
-                let nX2 = cents.x2 - arr[i].x
-            }
-            if(arr[i].x3 == cents.x){
-                let nX3 = 0;
-            }else{
-                let nX3 = cents.x3 - arr[i].x
-            }
-
-            if(arr[i].y1 == cents.y){
-                let nY1 = 0;
-            }else{
-                let nY1 = cents.y1 - arr[i].y
-            }
-            if(arr[i].y2 == cents.y){
-                let nY2 = 0;
-            }else{
-                let nY2 = cents.y2 - arr[i].y
-            }
-            if(arr[i].y3 == cents.y){
-                let nY3 = 0;
-            }else{
-                let nY3 = cents.y3 - arr[i].y
-            }
-            newArr.push({x1:nX1,y1:nY1,x2:nX2,y2:nY2,x3:nX3,y3:nY3});
+             let nX1 = 0;
+             let nX2 = 0;
+             let nX3 = 0;
+             let nY1 = 0;
+             let nY2 = 0;
+             let nY3 = 0;
+             if(arr[i].x1 == cents.x){
+                 nX1 = 0;
+             }else{
+                  nX1 = cents.x - arr[i].x1
+              }
+              if(arr[i].x2 == cents.x){
+                  nX2 = 0;
+              }else{
+                  nX2 = cents.x - arr[i].x2
+              }
+              if(arr[i].x3 == cents.x){
+                  nX3 = 0;
+              }else{
+                  nX3 = cents.x - arr[i].x3
+              }
+              if(arr[i].y1 == cents.y){
+                  nY1 = 0;
+              }else{
+                  nY1 = cents.y - arr[i].y1
+              }
+              if(arr[i].y2 == cents.y){
+                  nY2 = 0;
+              }else{
+                  nY2 = cents.y - arr[i].y2
+              }
+              if(arr[i].y3 == cents.y){
+                  nY3 = 0;
+              }else{
+                 nY3 = cents.y - arr[i].y3
+              }
+              nArr.push({x1:nX1,y1:nY1,x2:nX2,y2:nY2,x3:nX3,y3:nY3});
         }
-    }
     
+    }
     nArr.push(cents)
-    // console.log(nArr)
+    console.log(nArr)
     return(nArr)
 }
 function testFunc(arr){
